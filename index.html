@@ -7,21 +7,51 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>✅ Checklist Maker</h1>
 
-        <div class="input-area">
-            <input
-                type="text"
-                id="taskInput"
-                placeholder="Add a task..."
-            >
-            <button id="addBtn">Add</button>
-        </div>
+<div class="container">
 
-        <ul id="taskList"></ul>
+    <h1>✅ Checklist Maker</h1>
+
+    <div class="creator">
+
+        <input
+            type="text"
+            id="taskName"
+            placeholder="Task name..."
+        >
+
+        <select id="priority">
+            <option value="Low">🟢 Low</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="High">🔴 High</option>
+        </select>
+
+        <input
+            type="number"
+            id="totalSteps"
+            min="1"
+            value="1"
+            placeholder="Total Steps"
+        >
+
+        <button id="addTask">
+            Add Task
+        </button>
+
     </div>
 
-    <script src="script.js"></script>
+    <div class="overall-progress">
+        <h3>Overall Progress</h3>
+        <span id="overallText">0 / 0 Completed</span>
+        <div class="bar">
+            <div id="overallBar"></div>
+        </div>
+    </div>
+
+    <ul id="taskList"></ul>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
