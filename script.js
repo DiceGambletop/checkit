@@ -10,28 +10,41 @@ const overallBar = document.getElementById("overallBar");
 
 let tasks = [];
 
+// ------------------------------
+// OVERALL PROGRESS (TASK-BASED)
+// ------------------------------
 function updateOverallProgress() {
 
-    let completed = 0;
-    let total = 0;
+    let completedTasks = 0;
+    let totalTasks = tasks.length;
 
     tasks.forEach(task => {
-        completed += task.completedSteps;
-        total += task.totalSteps;
+        if (task.completedSteps === task.totalSteps) {
+            completedTasks++;
+        }
     });
 
     overallText.textContent =
-        `${completed} / ${total} Completed`;
+        `${completedTasks} / ${totalTasks} Tasks Completed`;
 
     const percent =
-        total === 0
+        totalTasks === 0
             ? 0
-            : (completed / total) * 100;
+            : (completedTasks / totalTasks) * 100;
 
     overallBar.style.width = `${percent}%`;
 }
 
+// ------------------------------
+// RENDER TASKS (WITH SORTING)
+// ------------------------------
 function renderTasks() {
+
+    // Sort tasks by priority (High → Medium → Low)
+    tasks.sort((a, b) => {
+        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+        return priorityOrder[b.priority] - priorityOrder[a.priority];
+    });
 
     taskList.innerHTML = "";
 
@@ -75,54 +88,33 @@ function renderTasks() {
 
                 <div class="task-controls">
 
-                    <button class="minus">
-                        −
-                    </button>
-
-                    <button class="plus">
-                        +
-                    </button>
-
-                    <button class="delete">
-                        Delete
-                    </button>
+                    <button class="minus">−</button>
+                    <button class="plus">+</button>
+                    <button class="delete">Delete</button>
 
                 </div>
             </div>
         `;
 
-        const minusBtn =
-            li.querySelector(".minus");
-
-        const plusBtn =
-            li.querySelector(".plus");
-
-        const deleteBtn =
-            li.querySelector(".delete");
+        const minusBtn = li.querySelector(".minus");
+        const plusBtn = li.querySelector(".plus");
+        const deleteBtn = li.querySelector(".delete");
 
         minusBtn.addEventListener("click", () => {
-
             if (task.completedSteps > 0) {
                 task.completedSteps--;
             }
-
             renderTasks();
         });
 
         plusBtn.addEventListener("click", () => {
-
-            if (
-                task.completedSteps <
-                task.totalSteps
-            ) {
+            if (task.completedSteps < task.totalSteps) {
                 task.completedSteps++;
             }
-
             renderTasks();
         });
 
         deleteBtn.addEventListener("click", () => {
-
             tasks.splice(index, 1);
             renderTasks();
         });
@@ -133,12 +125,13 @@ function renderTasks() {
     updateOverallProgress();
 }
 
+// ------------------------------
+// ADD TASK
+// ------------------------------
 addTaskBtn.addEventListener("click", () => {
 
     const name = taskName.value.trim();
-
-    const total =
-        parseInt(totalSteps.value);
+    const total = parseInt(totalSteps.value);
 
     if (!name) return;
     if (total < 1) return;
